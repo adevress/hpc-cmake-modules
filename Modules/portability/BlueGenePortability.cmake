@@ -7,8 +7,13 @@ endif()
 
 
 if(BLUEGENE)
-# define library type to static on BGQ
-set(COMPILE_LIBRARY_TYPE "STATIC")
+	# define library type to static on BGQ
+	set(COMPILE_LIBRARY_TYPE "STATIC")
+	## Blue Gene/Q do not support linking with MPI library when compiled with mpicc wrapper
+        ## we disable any MPI_X_LIBRARY linking and rely on mpicc wrapper
+	set(MPI_LIBRARIES "")
+	set(MPI_C_LIBRARIES "")	
+	set(MPI_CXX_LIBRARIES "")
 else()
 
 if(NOT COMPILE_LIBRARY_TYPE)
