@@ -8,9 +8,23 @@ if(IS_DIRECTORY "/bgsys" AND (NOT DEFINED BLUEGENE) )
 endif()
 
 
-if(BLUEGENE AND CMAKE_C_COMPILER_IS_XLC )
+
+## by default, enforce static linking with XLC on BGQ
+## static linking can be control with the variable CMAKE_ENFORCE_STATIC
+if(BLUEGENE AND CMAKE_C_COMPILER_IS_XLC AND (NOT DEFINED CMAKE_ENFORCE_STATIC ) )
+
+set(CMAKE_ENFORCE_STATIC TRUE)
+
+endif()
+
+
+if(BLUEGENE AND CMAKE_ENFORCE_STATIC )
 	# define library type to static on BGQ
 	set(COMPILE_LIBRARY_TYPE "STATIC")
+
+    ##change lookup order for libraries
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;.so")
+
 	## Blue Gene/Q do not support linking with MPI library when compiled with mpicc wrapper
         ## we disable any MPI_X_LIBRARY linking and rely on mpicc wrapper
 	set(MPI_LIBRARIES "")
